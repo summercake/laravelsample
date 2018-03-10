@@ -31,10 +31,10 @@ class UsersController extends Controller
 	return view('users.create');
     }
 
-    public function show(User $user)
-    {
-	return view('users.show', compact('user'));
-    }
+//    public function show(User $user)
+//    {
+//	return view('users.show', compact('user'));
+//    }
 
     public function store(Request $request)
     {
@@ -113,5 +113,13 @@ class UsersController extends Controller
 	Auth::login($user);
 	session()->flash('success', 'Congratulation, activate successfully!!!');
 	return redirect()->route('users.show', [$user]);
+    }
+
+    public function show(User $user)
+    {
+	$statuses = $user->statuses()
+		       	 ->orderBy('created_at','desc')
+			 ->paginate(30);
+	return view('users.show', compact('user', 'statuses'));
     }
 }
